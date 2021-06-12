@@ -1,0 +1,95 @@
+<todos>     ::= <todo> ("\n" <todo>)*
+
+<todo>      ::= <group>* <ident> " "* "|" |
+                <group>* <ident> " "* "|" <date> |
+                <group>* <ident> " "* "|" <date> "@" <time> |
+                <group>* <ident> " "* "|" <date> " " "@" <time> |
+                <group>* <ident> " "* "|" <date> "@" " " <time> |
+                <group>* <ident> " "* "|" <date> " " "@" " " <time> |
+                <group>* <ident> " "* "|" " " <date> |
+                <group>* <ident> " "* "|" " " <date> "@" <time> |
+                <group>* <ident> " "* "|" " " <date> " " "@" <time> |
+                <group>* <ident> " "* "|" " " <date> "@" " " <time> |
+                <group>* <ident> " "* "|" " " <date> " " "@" " " <time>
+
+<date>      ::= <month> <date_spr> <day_num> <date_spr> <year> |
+                <month_num> <date_spr> <day_num> <date_spr> <year> |
+                <year> <date_spr> <month> <date_spr> <day_num> |
+                <year> <date_spr> <month_num> <date_spr> <day_num> |
+                <month> " " <day_num> |
+                <day_num> " " <month> |
+                "NEXT" " " <day> | "Next" " " <day> | "next" " " <day> |
+                "TODAY" | "Today" | "today" | "TDY" | "Tdy" | "tdy" |
+                "TOMORROW" | "Tomorrow" | "tomorrow" | "TMR" | "Tmr" | "tmr"
+                
+<date_spr>  ::= " " | "-" | "." | "/"
+
+<time>      ::= <hours24> ":" <mins> |
+                <hours> ":" <mins> <ampm> |
+                "NOON" | "Noon" | "noon" |
+                "MIDNIGHT" | "Midnight" | "midnight"
+
+<hours>     ::= "0" [1-9] | [1-9] | "1" [0-2]
+<hours24>   ::= [0-1] [0-9] | "2" [0-3]
+<mins>      ::= [0-5] [0-9]
+
+<ampm>      ::= "AM" | "am" | "A.M." | "a.m." |
+                "PM" | "pm" | "P.M." | "p.m."
+
+<year>      ::= "2" [0-9] [0-9] [0-9]
+
+<month>     ::=  <jan> | <feb> | <mar> | <apr> | <may> | <jun> |
+                 <jly> | <aug> | <sep> | <oct> | <nov> | <dec>
+
+/* Token { typ: JAN, value} */
+<jan>       ::= "JANUARY"   | "January"   | "january"   | "JAN" | "Jan" | "jan"
+/* Token { typ: FEB, value } */
+<feb>       ::= "FEBRUARY"  | "February"  | "february"  | "FEB" | "Feb" | "feb"
+/* Token { typ: MAR, value } */
+<mar>       ::= "MARCH"     | "March"     | "march"     | "MAR" | "Mar" | "mar"
+/* Token { typ: APR, value } */
+<apr>       ::= "APR"       | "April"     | "april"     | "APR" | "Apr" | "apr"
+/* Token { typ: MAY, value } */
+<may>       ::= "MAY"       | "May"       | "may"       | "MAY" | "May" | "may"
+/* Token { typ: JUN, value } */
+<jun>       ::= "JUNE"      | "June"      | "june"      | "JUN" | "Jun" | "jun"
+/* Token { typ: JLY, value } */
+<jly>       ::= "JULY"      | "July"      | "july"      | "JLY" | "Jly" | "jly"
+/* Token { typ: AUG, value } */
+<aug>       ::= "AUGUST"    | "August"    | "august"    | "AUG" | "Aug" | "aug"
+/* Token { typ: SEP, value } */
+<sep>       ::= "SEPTEMBER" | "September" | "september" | "SEP" | "Sep" | "sep"
+/* Token { typ: OCT, value } */
+<oct>       ::= "OCTOBER"   | "October"   | "october"   | "OCT" | "Oct" | "oct"
+/* Token { typ: NOV, value } */
+<nov>       ::= "NOVEMBER"  | "November"  | "november"  | "NOV" | "Nov" | "nov"
+/* Token { typ: DEC, value } */
+<dec>       ::= "DECEMBER"  | "December"  | "december"  | "DEC" | "Dec" | "dec"
+
+/* Token { typ: MonthNum, value } */
+<month_num> ::= [1-9] | "1" [0-2]
+
+<day>       ::= <mon> | <tue> | <wed> | <thr> | <fri> | <sat> | <sun>
+/* Token { typ: MONDAY, value } */ 
+<mon>       ::= "MONDAY"    | "Monday"    | "monday"    | "MON" | "Mon" | "mon" | "M" | "m"
+/* Token { typ: TUESDAY, value } */
+<tue>       ::= "TUESDAY"   | "Tuesday"   | "tuesday"   | "TUE" | "Tue" | "tue" | "T" | "t"
+/* Token { typ: WEDNESDAY, value } */
+<wed>       ::= "WEDNESDAY" | "Wednesday" | "wednesday" | "WED" | "Wed" | "wed" | "W" | "w"
+/* Token { typ: THURSDAY, value } */
+<thr>       ::= "THURSDAY"  | "Thursday"  | "thursday"  | "THR" | "Thr" | "thr" | "R" | "r"
+/* Token { typ: FRIDAY, value } */
+<fri>       ::= "FRIDAY"    | "Friday"    | "friday"    | "FRI" | "Fri" | "fri" | "F" | "f"
+/* Token { typ: SATURDAY, value } */
+<sat>       ::= "SATURDAY"  | "Saturday"  | "saturday"  | "SAT" | "Sat" | "sat" | "S" | "s"
+/* Token { typ: SUNDAY, value } */
+<sun>       ::= "SUNDAY"    | "Sunday"    | "sunday"    | "SUN" | "Sun" | "sun" | "U" | "u"
+
+<day_num>   ::= [1-9] | "0" [1-9] | [1-2] [0-9] | "3" [0-1]
+
+<group>     ::= <ident> ":" | <ident> ":" " "
+
+<ident>     ::= <char> | <char> <inr_ident>* <char>
+<inr_ident> ::= " " | <char>
+
+<char>      ::= [A-Z] | [a-z] | [0-9] | "_" | "-"

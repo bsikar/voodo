@@ -1,0 +1,140 @@
+#![allow(dead_code)]
+
+use std::ops::Range;
+
+const AT: char = '@';
+const COLON: char = ':';
+const PIPE: char = '|';
+
+enum TokenType {
+    AT,
+    COLON,
+    PIPE,
+    IDENT,
+    TIME, // or use an actual time crate
+    DATE, // or use an actual date crate
+    EOF,
+}
+
+enum ErrorType {}
+
+#[derive(Clone, Copy, Debug)]
+struct Pos<'a> {
+    idx: Option<usize>,
+    ln: usize,
+    col: Option<usize>,
+    text: &'a str,
+}
+
+impl Pos<'_> {
+    fn advance(&mut self, curr_char: Option<char>) {
+        // increment index
+        match self.idx {
+            Some(idx) => self.idx = Some(idx + 1),
+            None => self.idx = Some(0),
+        }
+
+        // increment col
+        match self.col {    
+            Some(idx) => self.idx = Some(idx + 1),
+            None => self.col = Some(0),
+        }
+
+        // increment ln whenever a newline is advanced
+        if let Some(c) = curr_char {
+            if c == '\n' {
+                self.ln += 1;
+                self.col = Some(0);
+            }
+        }
+    }
+}
+
+struct Token<'a> {
+    token_type: TokenType,
+    value: Option<String>,
+    range: Range<Pos<'a, >>,
+}
+
+struct Error<'a> {
+    error_type: ErrorType,
+    details: String,
+    range: Range<Pos<'a>>,
+}
+// TODO impl Display for Error {}
+
+// note for me:
+//              lexer: string -> tokens
+//              parser: tokens -> AST
+//              interpretor: AST -> functionality
+struct Lexer<'a> {
+    chars: Vec<char>,
+    pos: Pos<'a>,
+    curr_char: Option<char>,
+    error: Option<Error<'a>>,
+}
+
+impl<'a> Lexer<'a> {
+    fn from_string(string: &'a String) -> Lexer {
+        let mut chars: Vec<char> = string.chars().collect();
+        chars.reverse();
+
+        Lexer {
+            chars,
+            pos: Pos {
+                idx: None,
+                ln: 0,
+                col: None,
+                text: string.as_str(),
+            },
+            curr_char: None,
+            error: None,
+        }
+
+        // string dropped
+    }
+}
+
+/*
+    logic to add:
+    voodo add
+
+    GRAMMAR
+
+    <ident> = [A-z0-9-_ ]+
+    <time>  = we don't care (plug into crate)
+    <day>   = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |
+              Mon | Tues | Wed | Thurs | Fri | Sat | Sun |
+              M | T | W | R | F | S | U
+    <date>  = today | tomorrow | <day> | next <day>
+    <todo>  = (<ident>:)* <ident> | <date> @ <time> $
+    <todos> = <todo> | <todos> <todo>
+
+    voodo add "english: Test | tuesday @ 15:00"
+
+    voodo add "Aerospace Engineering: Quiz | tuesday @ 12:00 "
+
+    let buf = "line"
+    buf.reverse()
+
+    let mut todos = Vec<Todo>;
+
+
+
+    while buf.len() > 0 {
+        let c = buf.pop()
+
+        if c == start_of_ident {
+            while
+        }
+    }
+
+
+    "english: Test | tuesday @ 15:00"
+
+    "english" : // ident
+    "Test" | // name
+    "tuesday" @ // date
+    "15:00" $ // time
+
+*/
